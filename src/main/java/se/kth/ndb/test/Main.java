@@ -7,6 +7,6 @@ import java.io.IOException;
  */
 public class Main {
   public static void main(String argv[]) throws Exception{
-    new ScanAndMemoryTest().startApplication(argv);
+    new PKReadsTest2().startApplication(argv);
   }
 }
