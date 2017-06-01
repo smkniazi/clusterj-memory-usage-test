@@ -11,7 +11,7 @@ str_col2 varchar(3000), str_col3 varchar(3000), PRIMARY KEY (`partition_id`,`id`
 
 i.e. 
 
-`./run -dbHost host-where-db-is-installed -numThreads 100 -totalOps 10000000`
+`./run -dbHost host-where-db-is-installed -numThreads 150 -totalOps 10000000 -batchSize 100`
 
 
 
