@@ -246,7 +246,7 @@ public class PKReadsTest2 {
           System.out.println("Wrong data read. Expecting: "+partitionId+" read: "+dto.getIntCol1());
         }
       }
-      session.release(batch); // does not do shit
+      session.release(batch);
     }
   }
 }
