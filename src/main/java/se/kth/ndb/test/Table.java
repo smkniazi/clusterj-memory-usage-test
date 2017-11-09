@@ -1,6 +1,7 @@
 package se.kth.ndb.test;
 
 import com.mysql.clusterj.annotation.Column;
+import com.mysql.clusterj.annotation.Index;
 import com.mysql.clusterj.annotation.PartitionKey;
 import com.mysql.clusterj.annotation.PersistenceCapable;
 import com.mysql.clusterj.annotation.PrimaryKey;
@@ -14,6 +15,8 @@ import com.mysql.clusterj.annotation.PrimaryKey;
 create table `test_table` (`partition_id` int, `id` int, int_col1 int, int_col2 int, str_col1 varchar(3000),
 str_col2 varchar(3000), str_col3 varchar(3000), PRIMARY KEY (`partition_id`,`id`)) partition by key (partition_id);
 
+create table `test_sigsegv` (`id` int, `col1` int, `col2` varchar(3000)
+, PRIMARY KEY(`id`), KEY `col1_index` (`col1`));
 */
 
 public class Table {
@@ -50,4 +53,27 @@ public class Table {
     String getStrCol3();
     void setStrCol3(String val);
   }
+  static final String CREATE_SIGTABLE = "create table `test_sigsegv` (`id` int, " +
+      "`col1` int, `col2` varchar(3000)" +
+      ", PRIMARY KEY(`id`), KEY `col1_index` (`col1`));";
+
+  @PersistenceCapable(table = "test_sigsegv")
+  public interface SIGTable {
+
+    @PrimaryKey
+    @Column(name = "id")
+    int getId();
+    void setId(int id);
+
+    @Column(name = "col1")
+    @Index(name = "col1_index")
+    int getCol1();
+    void setCol1(int val);
+
+    @Column(name = "col2")
+    String getCol2();
+    void setCol2(String val);
+  }
+
+
 }
