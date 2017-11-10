@@ -28,19 +28,26 @@ import org.kohsuke.args4j.Option;
 
 import java.util.List;
 import java.util.Properties;
+import java.util.Random;
 
 public class SIGSEGVTest {
 
   @Option(name = "-schema", usage = "DB schemma name. Default is test")
   private String schema = "test";
   @Option(name = "-dbHost", usage = "com.mysql.clusterj.connectstring. Default is bbc2")
-  static private String dbHost = "bbc2.sics.se";
+  private String dbHost = "bbc2.sics.se";
+  @Option(name = "-rows", usage = "Num of rows in the table. Default 45.")
+  private int num_rows = 45;
+  @Option(name = "-sessions", usage = "Num of sessions created. Default 1000.")
+  private int num_sessions = 1000;
   @Option(name = "-help", usage = "Print usages")
   private boolean help = false;
 
-  private final int NUM_ROWS = 45;
 
-  SessionFactory sf;
+
+  private SessionFactory sf;
+  private Session simpleSessionPool[];
+  private Random rand = new Random();
 
   private void setUpDBConnection() throws Exception {
     Properties props = new Properties();
@@ -54,12 +61,13 @@ public class SIGSEGVTest {
     props.setProperty("com.mysql.clusterj.max.transactions", "1024");
     props.setProperty("com.mysql.clusterj.connection.pool.size", "1");
     sf = ClusterJHelper.getSessionFactory(props);
+    createSessions();
   }
 
   private void populateDB() throws Exception {
     Session session = sf.getSession();
     session.currentTransaction().begin();
-    for (int i = 0; i < NUM_ROWS; i++) {
+    for (int i = 0; i < num_rows; i++) {
       Table.SIGTable row = session.newInstance(Table.SIGTable.class);
       row.setId(i);
       row.setCol1(i+1);
@@ -71,15 +79,15 @@ public class SIGSEGVTest {
     System.out.println("Test data created.");
   }
 
+
   private void runTest(){
     long startTime = System.currentTimeMillis();
     int round =0;
     while(true){
-      Session session = sf.getSession();
-      for(int i=1;i<NUM_ROWS; i++){
+      Session session = getSession();
+      for(int i=1;i<num_rows; i++){
         session.currentTransaction().begin();
         session.setLockMode(LockMode.EXCLUSIVE);
-        System.out.println("READ: " + i);
         QueryBuilder qb = session.getQueryBuilder();
         QueryDomainType<Table.SIGTable> dobj = qb.createQueryDefinition(
             Table.SIGTable.class);
@@ -111,6 +119,8 @@ public class SIGSEGVTest {
     } catch (Exception e) {
       System.err.println(e.getMessage());
       parser.printUsage(System.err);
+      System.err.println("Make Sure to create a SIGTable for test\n " + Table
+          .CREATE_SIGTABLE);
       System.err.println();
       System.exit(-1);
     }
@@ -121,6 +131,17 @@ public class SIGSEGVTest {
           .CREATE_SIGTABLE);
       System.exit(0);
     }
+  }
+
+  private void createSessions(){
+    simpleSessionPool = new Session[num_sessions];
+    for(int s=0; s<num_sessions; s++){
+      simpleSessionPool[s]  = sf.getSession();
+    }
+  }
+
+  private Session getSession(){
+    return simpleSessionPool[rand.nextInt(num_sessions)];
   }
 
   public void start(String[] argv) throws Exception {
