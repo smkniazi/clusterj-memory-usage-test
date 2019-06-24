@@ -40,9 +40,21 @@
         </dependency>
 
         <dependency>
-            <groupId>com.mysql.ndb</groupId>
-            <artifactId>clusterj</artifactId>
-            <version>7.5.8</version>
+          <groupId>com.mysql.ndb</groupId>
+          <artifactId>clusterj-hops-fix</artifactId>
+          <version>7.6.10</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.apache.openjpa</groupId>
+            <artifactId>openjpa-persistence-jdbc</artifactId>
+            <version>3.1.0</version>
+        </dependency>
+
+        <dependency>
+            <groupId>mysql</groupId>
+            <artifactId>mysql-connector-java</artifactId>
+            <version>5.1.6</version>
         </dependency>
 
     </dependencies>
@@ -86,12 +98,16 @@
 
     <repositories>
         <repository>
-            <id>sics-release</id>
-            <name>SICS Release Repository</name>
-            <url>http://kompics.sics.se/maven/repository</url>
-            <snapshots>
-                <updatePolicy>never</updatePolicy>
-            </snapshots>
+          <id>Hops</id>
+          <name>Hops Repo</name>
+          <url>https://bbc1.sics.se/archiva/repository/Hops/</url>
+          <releases>
+            <enabled>true</enabled>
+          </releases>
+          <snapshots>
+            <enabled>true</enabled>
+          </snapshots>
         </repository>
     </repositories>
+  
 </project>

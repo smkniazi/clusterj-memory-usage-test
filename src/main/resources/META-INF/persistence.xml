@@ -1,0 +1,28 @@
+<persistence xmlns="http://java.sun.com/xml/ns/persistence"
+ xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="1.0">
+ <persistence-unit name="hop_salman" transaction-type="RESOURCE_LOCAL">
+     <provider>
+         org.apache.openjpa.persistence.PersistenceProviderImpl
+     </provider>
+
+ <class>jpatest.Employee</class>
+ <class>jpatest.Department</class>
+
+ <properties>
+ <property name="openjpa.jdbc.SynchronizeMappings" value="buildSchema" />
+ <property name="openjpa.ConnectionDriverName" value="com.mysql.jdbc.Driver" />
+ <property name="openjpa.ConnectionURL" value="jdbc:mysql://localhost:3306/hop_salman" />
+ <property name="openjpa.ConnectionUserName" value="hop" />
+ <property name="openjpa.ConnectionPassword" value="hop" />
+ <property name="openjpa.BrokerFactory" value="ndb" />
+ <property name="openjpa.jdbc.DBDictionary" value="TableType=ndbcluster" />
+ <property name="openjpa.ndb.connectString" value="localhost:1186" />
+ <property name="openjpa.ndb.database" value="hop_salman" />
+    <property name="openjpa.ConnectionRetainMode" value="transaction"/>
+ </properties>
+
+ </persistence-unit>
+</persistence>
+
+
+<!--property name="openjpa.BrokerFactory" value="com.mysql.ndbjtie.ndbapi.Ndb" /-->
