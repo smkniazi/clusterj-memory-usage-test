@@ -74,8 +74,8 @@ public class SIGSEGVTest {
   private void runTest(){
     long startTime = System.currentTimeMillis();
     int round =0;
+    Session session = sf.getSession();
     while(true){
-      Session session = sf.getSession();
       for(int i=1;i<NUM_ROWS; i++){
         session.currentTransaction().begin();
         session.setLockMode(LockMode.EXCLUSIVE);

@@ -6,6 +6,6 @@ package se.kth.ndb.test;
  */
 public class Main {
   public static void main(String argv[]) throws Exception{
-    new SIGSEGVTest().start(argv);
+    new ProjectionTest().startApplication(argv);
   }
 }
